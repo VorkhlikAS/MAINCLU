@@ -8,6 +8,15 @@ services:
       - BOT_TOKEN=
     networks:
       - manul-network
+  manul-db:
+    image: postgres:alpine
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+    volumes:
+      - manul-db-volume:/var/lib/postgresql/data
+    networks:
+      - manul-network
   manul-backend:
     build: 
       context: ./BACKEND/
@@ -19,3 +28,6 @@ services:
 
 networks:
   manul-network:
+
+volumes:
+  manul-db-volume: 
