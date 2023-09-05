@@ -1,0 +1,18 @@
+version: '3'
+services:
+  manul-bot:
+    build:
+      context: ./BOT/
+      dockerfile: Dockerfile
+  manul-backend:
+    build: 
+      context: ./BACKEND/
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    networks:
+      - manul-network
+
+network:
+  manul-network:
+
