@@ -4,6 +4,10 @@ services:
     build:
       context: ./BOT/
       dockerfile: Dockerfile
+    environment:
+      - BOT_TOKEN=
+    networks:
+      - manul-network
   manul-backend:
     build: 
       context: ./BACKEND/
@@ -13,6 +17,5 @@ services:
     networks:
       - manul-network
 
-network:
+networks:
   manul-network:
-
