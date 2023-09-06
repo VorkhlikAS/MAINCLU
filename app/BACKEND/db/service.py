@@ -7,7 +7,7 @@ async def get_users(session: AsyncSession) -> list[User]:
     return result.scalars().all()
 
 
-def add_user(session: AsyncSession, name: str, population: int):
-    new_user = City(name=name, population=population)
+def add_user(session: AsyncSession, name: str, status: int):
+    new_user = User(name=name, status=status)
     session.add(new_user)
     return new_user

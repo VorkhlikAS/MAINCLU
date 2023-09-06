@@ -1,13 +1,13 @@
 FROM python:latest
 
-ADD . /app
-
 WORKDIR /app
+
+COPY requirements.txt .
 
 RUN pip install -r requirements.txt
 
+ADD . .
+
 # RUN python3 ./db/main.py
 
-# CMD [ "python3", "main.py" ]
-
-CMD [ "bash", ".sh" ] 
+CMD [ "python", "server.py" ]

@@ -9,7 +9,7 @@ class User(Base):
 
     id = Column(Integer, autoincrement=True, primary_key=True, index=True)
     name = Column(String, unique=True)
-    state = Column(Integer)
+    status = Column(Integer)
 
 
 # class State(Base):

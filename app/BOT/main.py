@@ -14,10 +14,10 @@ def send_welcome(message):
         # Сохраним пользователя в БД
         try:
             response = requests.post("http://manul-backend:8000/users/", 
-                data={"name": f"{str(message.from_user.id)}",
-                    "status": "0"},
-                headers={"Content-Type": "application/json"},
-            )
+                json={"name": f"{message.from_user.id}",
+                    "status": 0},)
+            #     headers={"Content-Type": "application/json"}
+            # )
         except Exception as e:
             pass
         # Приветствие
