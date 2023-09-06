@@ -13,8 +13,10 @@ services:
     environment:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_USER=postgres
+      - POSTGRES_DB=db_manul
     volumes:
       - manul-db-volume:/var/lib/postgresql/data
+      - ./backend/db_init/:/docker-entrypoint-initdb.d/
     networks:
       - manul-network
   manul-backend:
@@ -25,6 +27,8 @@ services:
       - "8000:8000"
     networks:
       - manul-network
+    depends_on:
+      - manul-db
 
 networks:
   manul-network:

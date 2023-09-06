@@ -1,1 +1,6 @@
 fastapi[all]
+sqlalchemy
+pydantic
+fastapi-async-sqlalchemy 
+asyncpg
+typer
