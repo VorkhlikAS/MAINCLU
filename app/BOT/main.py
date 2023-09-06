@@ -10,8 +10,16 @@ bot = telebot.TeleBot(BOT_TOKEN)
 
 @bot.message_handler(commands=['start', 'hello'])
 def send_welcome(message):
-    # bot.reply_to(message, "Howdy, how are you doing?")
     if message.text == '/start':
+        # Сохраним пользователя в БД
+        try:
+            response = requests.post("http://manul-backend:8000/users/", 
+                json={"name": f"{message.from_user.id}",
+                    "status": 0},)
+            #     headers={"Content-Type": "application/json"}
+            # )
+        except Exception as e:
+            pass
         # Приветствие
         bot.send_photo(message.from_user.id, 'https://cs14.pikabu.ru/post_img/2022/11/03/11/1667504777134725533.jpg')
         keyboard = types.InlineKeyboardMarkup()
@@ -25,6 +33,18 @@ def send_welcome(message):
                                         reply_markup=keyboard)
 
 
+# Обработчик нажатий на кнопки
+@bot.callback_query_handler(func=lambda call: True)
+def callback_worker(call):
+    # Если нажали на одну из 12 кнопок — выводим гороскоп
+    if call.data == "secret_btn":
+        try:
+            response = requests.get("http://manul-backend:8000/users/get")
+            bot.send_message(call.from_user.id, response)
+        except Exception as e:    
+            bot.send_message(call.from_user.id, f'Ой, что-то пошло не так :(\nПовторите попытку позже...\n{e}')
+
+
 @bot.message_handler(func=lambda msg: True)
 def echo_all(message):
     bot.reply_to(message, message.text)
@@ -35,7 +55,12 @@ def voice_processing(message):
     downloaded_file = bot.download_file(file_info.file_path)
     with open('new_file.ogg', 'wb') as new_file:
         new_file.write(downloaded_file)
-    response = requests.get("http://manul-backend:8000/SCORE/GET")
-    bot.reply_to(message, response)
+
+    try:
+        response = requests.get("http://manul-backend:8000/SCORE/GET")
+        bot.reply_to(message, response)
+    except Exception as e:    
+        bot.reply_to(message, f'Ой, что-то пошло не так :(\nПовторите попытку позже...\n{e}')
+
 
 bot.infinity_polling()
