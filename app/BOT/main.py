@@ -26,7 +26,8 @@ def send_welcome(message):
         except Exception as e:
             bot.send_message(message.from_user.id, f'{e}')
         # Приветствие
-        bot.send_photo(message.from_user.id, 'https://cs14.pikabu.ru/post_img/2022/11/03/11/1667504777134725533.jpg')
+        # bot.send_photo(message.from_user.id, 'https://cs14.pikabu.ru/post_img/2022/11/03/11/1667504777134725533.jpg')
+        bot.send_photo(message.from_user.id, 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNW8yNThheTYxdHF2YXpseDVjd2w4aGZ4amQ1Z3hhbm5iNGk5cGQwbyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/VFf2015gPpE80ii9iX/giphy.gif')
         keyboard = types.InlineKeyboardMarkup()
         btn = types.InlineKeyboardButton(text='DEBUG: Все пользователи', callback_data='all_users')
         keyboard.add(btn)
@@ -105,19 +106,19 @@ def voice_processing(message):
 
 def set_user_status(call: int, status: int) -> None: 
     try: 
-        requests.post("http://manul-backend:8000/users/status/",
+        requests.post("http://manul-backend:8000/users/status/", # TODO: replace with params
                                 json={
                                     "id":f"{call.from_user.id}",
                                     "status": status
-                                })
+                                },)
     except Exception as e: 
         bot.send_message(call.from_user.id, f'Ой, что-то пошло не так :(\nПовторите попытку позже...\n{e}')
 
 
 def get_status(user_id: int) -> requests.Response:
-    response = requests.post("http://manul-backend:8000/users/status/get", 
-                            json={
-                                "id": f"{user_id}",
+    response = requests.get("http://manul-backend:8000/users/status/get", 
+                            params={
+                                "user_id": user_id,
                                 },) 
     return response
 

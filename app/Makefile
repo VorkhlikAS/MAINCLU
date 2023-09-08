@@ -1,3 +1,5 @@
+.DEFAULT_GOAL := all
+
 all:
 	docker compose up --build
 down:

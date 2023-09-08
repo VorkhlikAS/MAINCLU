@@ -18,33 +18,12 @@ async def set_user_status(session: AsyncSession, id:int, new_status: int):
     )
     result = await session.execute(select(User.status).where(User.id == id))
     print(result.scalars().first())
-    session.commit()
+    await session.commit()
     
-    # if db_user is None:
-    #     return None
 
-    # # Update model class variable from requested fields 
-    # for var, value in vars(user).items():
-    #     setattr(db_user, var, value) if value else None
-
-    # db_user.modified = modified_now
-    # db.add(db_user)
-    # db.commit()
-    # db.refresh(db_user)
-    # return db_user
-    # session.execute(
-    #     update(User),
-    #         [
-    #             {"id": id, "status": new_status},
-    #         ],
-    # )
-    # session.commit()
-
-
-def add_user(session: AsyncSession, id:int, name: str, status: int):
+async def add_user(session: AsyncSession, id:int, name: str, status: int):
     new_user = User(id=id, name=name, status=status)
     session.add(new_user)
     # session.refresh()
-    session.commit()
-    session.flush()
+    await session.commit()
     return new_user
