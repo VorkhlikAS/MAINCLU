@@ -1,5 +1,6 @@
 import uvicorn
-from fastapi import FastAPI, HTTPException
+# import aiofiles
+from fastapi import FastAPI, HTTPException, File, UploadFile
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from pydantic import BaseModel
@@ -8,9 +9,13 @@ from fastapi_async_sqlalchemy import exceptions
 from db import service
 from db import base, get_session
 from db.manager import init_models
+from data import ModelWorker
+from fastapi.responses import FileResponse
+import os
+import time
 
 app = FastAPI()
-
+model = ModelWorker()
 
 class UserSchema(BaseModel):
     id: int
@@ -29,9 +34,21 @@ async def get_users(session: AsyncSession = Depends(get_session)):
     return [UserSchema(id=c.id, name=c.name, status=c.status) for c in users]   
 
 
-@app.get("/score/get")
-async def root():
-    return {"score": 100}
+@app.post("/voice/")
+async def upload_voice(voice: UploadFile, user_id: int, user_status: int):
+    filename = f'{user_id}_{time.time()}.ogg'
+    # out_file_path = os.path.join(os.getcwd(), os.path.join('data', filename))
+    
+    # async with aiofiles.open(out_file_path, 'wb') as out_file:
+    #     content = await voice.read()  # async read
+    #     await out_file.write(content)  # async write
+    
+    result = await model.run_model(voice, filename, user_status)
+        
+    if user_status == 1:
+        return FileResponse(result)
+    else:
+        return { "result": result }
 
 
 @app.get("/users/status/get")
@@ -50,7 +67,7 @@ async def set_status(user: UserStatusSchema, session: AsyncSession = Depends(get
 
 @app.post("/users/")
 async def add_user(user: UserSchema, session: AsyncSession = Depends(get_session)):
-    user = service.add_user(session, user.id, user.name, user.status)
+    user = await service.add_user(session, user.id, user.name, user.status)
     try:
         await session.commit()
         return user

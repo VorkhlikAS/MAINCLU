@@ -1,5 +1,6 @@
 services:
   manul-bot:
+    restart: always
     build:
       context: ./BOT/
       dockerfile: Dockerfile
@@ -10,6 +11,7 @@ services:
     
   manul-db:
     image: postgres:alpine
+    restart: always
     env_file:
       - .env
     healthcheck:
@@ -27,11 +29,14 @@ services:
       - manul-network
   
   manul-backend:
+    restart: always
     build: 
       context: ./BACKEND/
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
+    volumes:
+      - ./backend/data:/app/data
     networks:
       - manul-network
     depends_on:
