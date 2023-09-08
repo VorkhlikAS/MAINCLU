@@ -19,7 +19,7 @@ async def set_user_status(session: AsyncSession, id:int, new_status: int):
     result = await session.execute(select(User.status).where(User.id == id))
     print(result.scalars().first())
     session.commit()
-    session.flush()
+    
     # if db_user is None:
     #     return None
 

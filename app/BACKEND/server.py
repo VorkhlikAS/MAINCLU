@@ -30,7 +30,6 @@ class UserStatusSchema(BaseModel):
 @app.get("/users/get", response_model=list[UserSchema])
 async def get_users(session: AsyncSession = Depends(get_session)):
     users = await service.get_users(session)
-    session.close()
     return [UserSchema(id=c.id, name=c.name, status=c.status) for c in users]   
 
 
@@ -42,7 +41,6 @@ async def root():
 @app.post("/users/status/get")
 async def get_status(user: UserIdSchema, session: AsyncSession = Depends(get_session)):
     user_status = await service.get_user_status(session, user.id)
-    session.close()
     if user_status is None:
         raise HTTPException(status_code=404, detail="Invalid user id")
     else: 
@@ -51,7 +49,6 @@ async def get_status(user: UserIdSchema, session: AsyncSession = Depends(get_ses
 @app.post("/users/status/")
 async def get_status(user: UserStatusSchema, session: AsyncSession = Depends(get_session)):
     await service.set_user_status(session, user.id, user.status)
-    session.close()
     return user  
 
 
@@ -60,11 +57,9 @@ async def add_user(user: UserSchema, session: AsyncSession = Depends(get_session
     user = service.add_user(session, user.id, user.name, user.status)
     try:
         await session.commit()
-        session.close()
         return user
     except IntegrityError as ex:
-        await session.rollback()
-        session.close()
+        # await session.rollback()
         # raise exceptions.DuplicatedEntryError("The user is already stored")
         raise HTTPException(status_code=404, detail="User already exists")
         # return 0

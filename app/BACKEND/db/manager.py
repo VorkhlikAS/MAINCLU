@@ -9,7 +9,6 @@ def init_models():
         create_database(SYNC_DATABASE)
     Base.metadata.create_all(bind=sync_engine)
 
-
 async def get_session() -> AsyncSession:
     async with async_session() as session:
         yield session
