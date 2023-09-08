@@ -61,12 +61,14 @@ def callback_worker(call):
     elif call.data == "s2s":
         try: 
             set_user_status(call, 1)
+            bot.send_message(call.from_user.id, "Включен режим перевода в Голос")
             bot.send_message(call.from_user.id, "Ожидаю ваше сообщение...")
         except Exception as e:
             bot.send_message(call.from_user.id, f'Ой, что-то пошло не так :(\nПовторите попытку позже...\n{e}')    
     elif call.data == "s2t":
         try: 
             set_user_status(call, 2)
+            bot.send_message(call.from_user.id, "Включен режим перевода в Текст")
             bot.send_message(call.from_user.id, "Ожидаю ваше сообщение...")
         except Exception as e:
             bot.send_message(call.from_user.id, f'Ой, что-то пошло не так :(\nПовторите попытку позже...\n{e}')    
@@ -79,9 +81,15 @@ def echo_all(message):
 @bot.message_handler(content_types=['voice'])
 def voice_processing(message):
     response = get_status(message.from_user.id)
-    bot.reply_to(message, response.json())
-    if response.json()['status'] in (1, 2):
-        bot.reply_to(message, "Бла бла бла, ничего не понимаю")
+    
+    bot.reply_to(message, response)
+    if response.json()['status'] == '1':
+        bot.reply_to(message, "[Voice message]")
+    elif response.json()['status'] == '2':
+        bot.reply_to_message(message, "[Text message]") 
+    else:
+        bot.reply_to_message(message, response)
+        bot.reply_to_message(message, "Выберите вид обработки")
     
     file_info = bot.get_file(message.voice.file_id)
     downloaded_file = bot.download_file(file_info.file_path)
