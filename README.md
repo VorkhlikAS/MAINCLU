@@ -24,7 +24,7 @@ Follow these simple steps to run the project:
 
 3. *Build and run the project* using the provided Makefile:
 
-   '''shell
+   ```shell
    make
 
 That's it! Your project should now be up and running.
