@@ -261,11 +261,11 @@ MAINCLU — это голосовой помощник, созданный с и
 Архитектура решения.
 
 
-![image](https://github.com/VorkhlikAS/mainclu/tree/main/docs/design.png)
+![image](docs/design.png)
 
 Флоучарт мобильного приложения
 
-![image](https://github.com/VorkhlikAS/mainclu/tree/main/docs/schema.jpeg)
+![image](docs/schema.jpeg)
 
 ### 4.2. Описание инфраструктуры и масштабируемости
 
