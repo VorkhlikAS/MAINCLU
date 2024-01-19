@@ -2,3 +2,4 @@
 app/data/
 .env
 *.ogg
+.DS_Store
